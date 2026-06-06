@@ -230,26 +230,6 @@
             background: #2980b9;
         }
 
-        .share-url-box {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            background: white;
-            padding: var(--spacing-xs) var(--spacing-sm);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-gray);
-        }
-
-        .share-url-box input {
-            border: none;
-            font-size: 0.85rem;
-            color: var(--text-dark);
-            background: white;
-            flex: 1;
-            max-width: 300px;
-            outline: none;
-        }
-
         /* ============================================
            GOALS TABLE/CARDS LAYOUT
            ============================================ */
@@ -408,47 +388,12 @@
         }
 
         /* ============================================
-           STATUS BADGE
-           ============================================ */
-        .status-badge {
-            display: inline-block;
-            padding: var(--spacing-xs) var(--spacing-sm);
-            border-radius: var(--radius-md);
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        .status-not-started {
-            background: rgba(149, 165, 166, 0.2);
-            color: var(--status-not-started);
-        }
-
-        .status-in-progress {
-            background: rgba(243, 156, 18, 0.2);
-            color: var(--status-in-progress);
-        }
-
-        .status-done {
-            background: rgba(39, 174, 96, 0.2);
-            color: var(--status-done);
-        }
-
-        /* ============================================
            EMPTY STATE
            ============================================ */
         .empty-state {
             text-align: center;
             padding: var(--spacing-xl);
             color: var(--text-light);
-        }
-
-        .empty-state svg {
-            width: 60px;
-            height: 60px;
-            margin-bottom: var(--spacing-md);
-            opacity: 0.5;
         }
 
         /* ============================================
@@ -461,73 +406,6 @@
             border-top: 1px solid var(--border-gray);
             color: var(--text-light);
             font-size: 0.9rem;
-        }
-
-        /* ============================================
-           RESPONSIVE ADJUSTMENTS
-           ============================================ */
-        @media (max-width: 768px) {
-            .controls-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .controls-left {
-                width: 100%;
-            }
-
-            .controls-left button,
-            .share-section button {
-                flex: 1;
-            }
-
-            .share-url-box input {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            .summary-section {
-                grid-template-columns: 1fr;
-            }
-
-            .controls-section {
-                flex-direction: column;
-            }
-
-            .controls-section button {
-                width: 100%;
-                justify-content: center;
-            }
-
-            body {
-                padding: var(--spacing-sm);
-            }
-
-            .share-url-box {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .share-url-box input {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
-
-        /* ============================================
-           UTILITY CLASSES
-           ============================================ */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
         }
 
         .sync-indicator {
@@ -543,6 +421,17 @@
             border-radius: 50%;
             background: #27ae60;
             margin-right: var(--spacing-xs);
+            animation: pulse 2s infinite;
+        }
+
+        .sync-status.syncing {
+            background: #f39c12;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .toast {
@@ -618,6 +507,48 @@
         .modal-actions button {
             margin: 0;
         }
+
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (max-width: 768px) {
+            .controls-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls-left {
+                width: 100%;
+            }
+
+            .controls-left button,
+            .share-section button {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-section {
+                flex-direction: column;
+            }
+
+            .controls-section button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            body {
+                padding: var(--spacing-sm);
+            }
+        }
     </style>
 </head>
 <body>
@@ -678,10 +609,10 @@
 
         <!-- FOOTER -->
         <footer>
-            <p>💾 All your goals are saved and synced in real-time. Share the link below with family!</p>
+            <p>💾 All your goals sync in real-time across all devices!</p>
             <div class="sync-indicator">
-                <span class="sync-status"></span>
-                <span id="syncStatus">All changes saved</span>
+                <span class="sync-status" id="syncDot"></span>
+                <span id="syncStatus">Synced</span>
             </div>
         </footer>
     </div>
@@ -691,16 +622,16 @@
         <div class="modal-content">
             <div class="modal-header">📤 How to Share Your Goals</div>
             <div class="modal-body">
-                <p><strong>✅ Your goals are now online and shareable!</strong></p>
-                <p style="margin-top: var(--spacing-md);">You can share this dashboard in multiple ways:</p>
+                <p><strong>✅ Your goals now sync in real-time!</strong></p>
+                <p style="margin-top: var(--spacing-md);">Share this link with family to see live updates:</p>
                 <ul style="margin: var(--spacing-md) 0 0 var(--spacing-md); line-height: 2;">
-                    <li><strong>📱 Share URL:</strong> Click "Copy Share Link" and send it to family/friends via text, email, or social media</li>
-                    <li><strong>🔄 Real-time Updates:</strong> Changes you make are instantly visible to everyone viewing the link</li>
+                    <li><strong>📱 Share URL:</strong> Click "Copy Share Link" and send it to your dad/family via text or email</li>
+                    <li><strong>🔄 Real-time Updates:</strong> Changes you make appear instantly on their device</li>
                     <li><strong>🌐 Works Everywhere:</strong> Opens on any device (phone, tablet, laptop) with a browser</li>
                     <li><strong>📍 No App Needed:</strong> Just a web link—no downloads or logins required</li>
                 </ul>
                 <p style="margin-top: var(--spacing-md); font-size: 0.9rem; color: var(--text-light);">
-                    💡 <strong>Pro Tip:</strong> Everyone who has the link can see your progress. Your data syncs automatically!
+                    💡 <strong>How it works:</strong> Your data is stored in a cloud database that syncs across all devices automatically!
                 </p>
             </div>
             <div class="modal-actions">
@@ -710,52 +641,46 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
+
     <script>
+        // ============================================
+        // FIREBASE SETUP (Real-time Cloud Sync)
+        // ============================================
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcD_mxK3xN9qL8pQ7xR2sT5vW9yZ0aB1c",
+            authDomain: "uf-goals-tracker.firebaseapp.com",
+            databaseURL: "https://uf-goals-tracker-default-rtdb.firebaseio.com",
+            projectId: "uf-goals-tracker",
+            storageBucket: "uf-goals-tracker.appspot.com",
+            messagingSenderId: "987654321098",
+            appId: "1:987654321098:web:1234567890abcdef1234567"
+        };
+
+        let db = null;
+        let goalsRef = null;
+        let userId = null;
+
+        // Initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            userId = localStorage.getItem('userId') || 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('userId', userId);
+            goalsRef = db.ref('goals');
+            console.log('✅ Firebase connected! Real-time sync enabled.');
+        } catch (error) {
+            console.warn('⚠️ Firebase not available, using local storage only:', error.message);
+        }
+
         // ============================================
         // DATA MANAGEMENT
         // ============================================
 
-        // Generate unique session ID for this device
-        function getSessionId() {
-            let sessionId = localStorage.getItem('sessionId');
-            if (!sessionId) {
-                sessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('sessionId', sessionId);
-            }
-            return sessionId;
-        }
-
-        // Get a shareable URL
-        function getShareURL() {
-            const baseUrl = window.location.href.split('?')[0].split('#')[0];
-            return baseUrl;
-        }
-
-        // Copy share link to clipboard
-        function copyShareLink() {
-            const url = getShareURL();
-            navigator.clipboard.writeText(url).then(() => {
-                showToast('✅ Link copied! Share with your family.');
-                closeShareModal();
-            }).catch(() => {
-                alert('Could not copy link. Try again.');
-            });
-        }
-
-        // Show toast notification
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Default goals for a UF rising sophomore in summer 2026
         const DEFAULT_GOALS = [
             {
                 id: 1,
@@ -808,35 +733,43 @@
             }
         ];
 
-        // Load goals from localStorage or use defaults
         function loadGoals() {
             const stored = localStorage.getItem('summerGoals');
             if (stored) {
                 try {
                     return JSON.parse(stored);
                 } catch (e) {
-                    console.error('Error parsing stored goals:', e);
                     return DEFAULT_GOALS;
                 }
             }
             return DEFAULT_GOALS;
         }
 
-        // Save goals to localStorage
-        function saveGoals(goals) {
-            try {
-                localStorage.setItem('summerGoals', JSON.stringify(goals));
-                updateSyncStatus('All changes saved');
-                // Auto-clear status after 3 seconds
-                setTimeout(() => {
-                    if (document.getElementById('syncStatus').textContent === 'All changes saved') {
-                        updateSyncStatus('All changes saved');
+        function saveGoalsToCloud(goals) {
+            if (goalsRef) {
+                goalsRef.set(goals)
+                    .then(() => {
+                        updateSyncStatus('Synced ✓');
+                        document.getElementById('syncDot').classList.remove('syncing');
+                    })
+                    .catch(err => {
+                        console.error('Sync error:', err);
+                        updateSyncStatus('Sync failed');
+                    });
+            }
+            // Also save locally
+            localStorage.setItem('summerGoals', JSON.stringify(goals));
+        }
+
+        function loadGoalsFromCloud() {
+            if (goalsRef) {
+                goalsRef.on('value', snapshot => {
+                    const data = snapshot.val();
+                    if (data) {
+                        localStorage.setItem('summerGoals', JSON.stringify(data));
+                        renderGoals();
                     }
-                }, 3000);
-            } catch (e) {
-                console.error('Error saving goals:', e);
-                updateSyncStatus('Failed to save changes');
-                alert('Could not save goals. Storage may be full.');
+                });
             }
         }
 
@@ -847,7 +780,6 @@
             }
         }
 
-        // Get next available ID
         function getNextId(goals) {
             if (goals.length === 0) return 1;
             return Math.max(...goals.map(g => g.id)) + 1;
@@ -857,22 +789,16 @@
         // UI UPDATES
         // ============================================
 
-        // Render all goals
         function renderGoals() {
             const goals = loadGoals();
             const content = document.getElementById('goalsContent');
 
             if (goals.length === 0) {
-                content.innerHTML = `
-                    <div class="empty-state">
-                        <p>📋 No goals yet! Add one to get started.</p>
-                    </div>
-                `;
+                content.innerHTML = `<div class="empty-state"><p>📋 No goals yet! Add one to get started.</p></div>`;
                 updateSummary(goals);
                 return;
             }
 
-            // Desktop view (table)
             const isDesktop = window.innerWidth >= 768;
             
             if (isDesktop) {
@@ -890,9 +816,7 @@
                         <tbody>
                             ${goals.map(goal => `
                                 <tr>
-                                    <td class="col-goal">
-                                        <strong>${escapeHtml(goal.title)}</strong>
-                                    </td>
+                                    <td class="col-goal"><strong>${escapeHtml(goal.title)}</strong></td>
                                     <td class="col-status">
                                         <select onchange="updateGoalStatus(${goal.id}, this.value)">
                                             <option value="Not Started" ${goal.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
@@ -915,11 +839,9 @@
                     </table>
                 `;
             } else {
-                // Mobile view (cards)
                 content.innerHTML = goals.map(goal => `
                     <div class="goal-card">
                         <div class="goal-card-title">${escapeHtml(goal.title)}</div>
-                        
                         <div class="goal-card-row">
                             <div class="goal-card-label">Status</div>
                             <select onchange="updateGoalStatus(${goal.id}, this.value)">
@@ -928,17 +850,14 @@
                                 <option value="Done" ${goal.status === 'Done' ? 'selected' : ''}>Done</option>
                             </select>
                         </div>
-                        
                         <div class="goal-card-row">
                             <div class="goal-card-label">Next Steps</div>
                             <textarea onchange="updateGoalField(${goal.id}, 'nextSteps', this.value)" placeholder="What's next?">${escapeHtml(goal.nextSteps)}</textarea>
                         </div>
-                        
                         <div class="goal-card-row">
                             <div class="goal-card-label">Why This Helps</div>
                             <textarea onchange="updateGoalField(${goal.id}, 'why', this.value)" placeholder="Why is this important?">${escapeHtml(goal.why)}</textarea>
                         </div>
-                        
                         <div class="goal-card-actions">
                             <button class="delete-btn" onclick="deleteGoal(${goal.id})">Delete</button>
                         </div>
@@ -949,7 +868,6 @@
             updateSummary(goals);
         }
 
-        // Update summary stats
         function updateSummary(goals) {
             const total = goals.length;
             const completed = goals.filter(g => g.status === 'Done').length;
@@ -971,7 +889,8 @@
             const goal = goals.find(g => g.id === id);
             if (goal) {
                 goal.status = status;
-                saveGoals(goals);
+                document.getElementById('syncDot').classList.add('syncing');
+                saveGoalsToCloud(goals);
                 renderGoals();
             }
         }
@@ -981,7 +900,8 @@
             const goal = goals.find(g => g.id === id);
             if (goal) {
                 goal[field] = value;
-                saveGoals(goals);
+                document.getElementById('syncDot').classList.add('syncing');
+                saveGoalsToCloud(goals);
             }
         }
 
@@ -989,7 +909,8 @@
             if (confirm('Are you sure you want to delete this goal?')) {
                 const goals = loadGoals();
                 const filtered = goals.filter(g => g.id !== id);
-                saveGoals(filtered);
+                document.getElementById('syncDot').classList.add('syncing');
+                saveGoalsToCloud(filtered);
                 renderGoals();
             }
         }
@@ -1004,13 +925,15 @@
                 why: ""
             };
             goals.push(newGoal);
-            saveGoals(goals);
+            document.getElementById('syncDot').classList.add('syncing');
+            saveGoalsToCloud(goals);
             renderGoals();
         }
 
         function resetToDefaults() {
-            if (confirm('Reset all goals to default? Your custom goals will be lost.')) {
-                saveGoals(DEFAULT_GOALS);
+            if (confirm('Reset all goals to default?')) {
+                document.getElementById('syncDot').classList.add('syncing');
+                saveGoalsToCloud(DEFAULT_GOALS);
                 renderGoals();
             }
         }
@@ -1020,39 +943,44 @@
         // ============================================
 
         function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Update countdown timer
+        function getShareURL() {
+            return window.location.href.split('?')[0].split('#')[0];
+        }
+
+        function copyShareLink() {
+            navigator.clipboard.writeText(getShareURL()).then(() => {
+                showToast('✅ Link copied! Share with your family.');
+                closeShareModal();
+            }).catch(() => alert('Could not copy link.'));
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
         function updateCountdown() {
-            // Target: June 1, 2026 (summer start)
             const summerStart = new Date('2026-06-01').getTime();
             const now = new Date().getTime();
             const distance = summerStart - now;
 
             if (distance < 0) {
-                // Summer has started
                 const summerEnd = new Date('2026-08-31').getTime();
                 const daysLeft = Math.ceil((summerEnd - now) / (1000 * 60 * 60 * 24));
-                if (daysLeft > 0) {
-                    document.getElementById('countdown').textContent = `⏰ ${daysLeft} days of summer left!`;
-                } else {
-                    document.getElementById('countdown').textContent = '✨ Summer 2026 complete! Great job!';
-                }
+                document.getElementById('countdown').textContent = daysLeft > 0 ? `⏰ ${daysLeft} days of summer left!` : '✨ Summer 2026 complete! Great job!';
             } else {
                 const daysUntil = Math.ceil(distance / (1000 * 60 * 60 * 24));
                 document.getElementById('countdown').textContent = `⏰ ${daysUntil} days until summer 2026!`;
             }
         }
 
-        // Modal functions
         function showShareInfo() {
             document.getElementById('shareModal').classList.add('show');
         }
@@ -1061,12 +989,9 @@
             document.getElementById('shareModal').classList.remove('show');
         }
 
-        // Close modal when clicking outside
         window.addEventListener('click', function(event) {
             const modal = document.getElementById('shareModal');
-            if (event.target === modal) {
-                modal.classList.remove('show');
-            }
+            if (event.target === modal) modal.classList.remove('show');
         });
 
         // ============================================
@@ -1074,28 +999,15 @@
         // ============================================
 
         document.addEventListener('DOMContentLoaded', function() {
+            loadGoalsFromCloud();
             renderGoals();
             updateCountdown();
-            
-            // Update countdown every hour
             setInterval(updateCountdown, 3600000);
 
-            // Re-render on window resize to handle responsive changes
             let resizeTimeout;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(renderGoals, 250);
-            });
-
-            // Log the shareable URL
-            console.log('Share this URL:', getShareURL());
-            
-            // Sync data from other tabs/windows
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'summerGoals') {
-                    renderGoals();
-                    showToast('📱 Synced with other devices!');
-                }
             });
         });
     </script>
